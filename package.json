@@ -1,0 +1,33 @@
+{
+  "name": "creepto",
+  "version": "1.0.0",
+  "description": "Keep yourself updated with the latest crypto currency market price.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-packager ./ --platform=darwin --arch=x64 --out=out --icon=./icon.icns --overwrite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cyberdude/creepto.git"
+  },
+  "keywords": [
+    "crypto",
+    "currency",
+    "ticker",
+    "market"
+  ],
+  "author": "Arnaldo Capo",
+  "license": "MIT",
+  "dependencies": {
+    "electron-fetch": "^1.0.0"
+  },
+  "devDependencies": {
+    "electron": "~1.6.2",
+    "electron-packager": "^8.7.1"    
+  },
+  "bugs": {
+    "url": "https://github.com/cyberdude/creepto/issues"
+  },
+  "homepage": "https://github.com/cyberdude/creepto#readme"
+}
