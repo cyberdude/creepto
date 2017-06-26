@@ -1,4 +1,4 @@
-const {app, Tray, net} = require('electron')
+const {app, Tray, net, Menu} = require('electron')
 const path = require('path')
 const fetch = require('electron-fetch')
 
@@ -15,20 +15,25 @@ app.on('ready', () => {
   startTick()
   fetchPrice()
 })
-// Quit the app when the window is closed
-// app.on('window-all-closed', () => {
-//   app.quit()
-// })
 
 const createTray = () => {
   tray = new Tray(path.join(assetsDirectory, 'eth.png'))
   tray.setTitle('--')
+
+  const contextMenu = Menu.buildFromTemplate([
+    {label: 'Quit', type: 'normal', click: () => {
+      app.quit()
+    }}
+  ])
+
+  tray.setContextMenu(contextMenu)
   tray.on('click', function (event) {
 
   })
 }
 
 const fetchPrice = () => {
+
   fetch('https://api.gdax.com/products/ETH-USD/ticker')
     .then(res => res.json())
     .then(body => {
@@ -41,6 +46,9 @@ const fetchPrice = () => {
       price = price.toFixed(2)
       tray.setTitle('$' + price)
     })
+    // .then(function(){
+    //   tray.setHighlightMode('never')
+    // })
 }
 
 const startTick = () => {
