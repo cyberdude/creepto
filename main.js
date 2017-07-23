@@ -1,4 +1,4 @@
-const {app, Tray, net, Menu} = require('electron')
+const {app, Tray, net, Menu, BrowserWindow} = require('electron')
 const path = require('path')
 const fetch = require('electron-fetch')
 
@@ -14,7 +14,19 @@ app.on('ready', () => {
   createTray()
   startTick()
   fetchPrice()
+  createWindow()
 })
+
+function createWindow () {
+  mainWindow = new BrowserWindow({width: 800, height: 600})
+  // mainWindow.loadURL('file://' + __dirname + '/index.html')
+  mainWindow.loadURL('http://localhost:8080/')
+
+  // dereference the mainWindow object when the window is closed
+  mainWindow.on('closed', function() {
+      mainWindow = null
+  })
+}
 
 const createTray = () => {
   tray = new Tray(path.join(assetsDirectory, 'eth.png'))
