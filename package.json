@@ -1,7 +1,7 @@
 {
   "name": "creepto",
   "version": "1.0.0",
-  "description": "Keep yourself updated with the latest crypto currency market price.",
+  "description": "Keep yourself up to date with the latest crypto currency market price.",
   "main": "main.js",
   "scripts": {
     "dev": "node build/dev-server.js",

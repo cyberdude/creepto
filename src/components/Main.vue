@@ -2,7 +2,7 @@
   <div>
     <ul>
       <li v-for="alert in alerts">
-        {{alert.price}} | {{alert.alerted}}
+        {{alert.direction}} {{alert.price}} | alerted: {{alert.alerted}}
       </li>
     </ul>
   </div>
