@@ -40,6 +40,7 @@ app.on('ready', () => {
   createTray()
   startTick()
   fetchPrice()
+  createWindow()
 })
 
 app.on('window-all-closed', () => {
@@ -49,16 +50,35 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
+  console.log('Activating')
   if (mainWindow === null) {
+    console.log('creating window')
     createWindow()
   }
 })
+
+// const toggleWindow = () => {
+//   if (mainWindow.isVisible()) {
+//     mainWindow.hide()
+//   } else {
+//     mainWindow.show()
+//     mainWindow.focus()
+//   }
+// }
 
 const createTray = () => {
   tray = new Tray(path.join(__static, 'eth.png'))
   tray.setTitle('--')
 
   const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Alerts',
+      type: 'normal',
+      click: () => {
+        mainWindow.show()
+        mainWindow.focus()
+      }
+    },
     {
       label: 'Quit',
       type: 'normal',
