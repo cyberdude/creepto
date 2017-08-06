@@ -40,7 +40,6 @@ app.on('ready', () => {
   createTray()
   startTick()
   fetchPrice()
-  createWindow()
 })
 
 app.on('window-all-closed', () => {
@@ -75,8 +74,9 @@ const createTray = () => {
       label: 'Alerts',
       type: 'normal',
       click: () => {
-        mainWindow.show()
-        mainWindow.focus()
+        // mainWindow.show()
+        // mainWindow.focus()
+        createWindow()
       }
     },
     {
