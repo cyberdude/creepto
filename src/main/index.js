@@ -2,7 +2,6 @@
 
 import { app, BrowserWindow, Tray, Menu } from 'electron'
 import path from 'path'
-const fetch = require('electron-fetch')
 
 /**
  * Set `__static` path to static files in production
@@ -95,10 +94,10 @@ const createTray = () => {
 }
 
 const fetchPrice = () => {
-  fetch('https://api.gdax.com/products/ETH-USD/ticker')
-    .then(res => res.json())
-    .then(body => {
-      var price = parseFloat(body.price)
+  this.$http.get('https://api.gdax.com/products/ETH-USD/ticker')
+    .then(response => {
+      const body = response.data
+      const price = parseFloat(body.price)
 
       if (isNaN(price)) {
         return
