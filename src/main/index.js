@@ -2,6 +2,7 @@
 
 import { app, BrowserWindow, Tray, Menu } from 'electron'
 import path from 'path'
+import axios from 'axios'
 
 /**
  * Set `__static` path to static files in production
@@ -94,10 +95,10 @@ const createTray = () => {
 }
 
 const fetchPrice = () => {
-  this.$http.get('https://api.gdax.com/products/ETH-USD/ticker')
+  axios.get('https://api.gdax.com/products/ETH-USD/ticker')
     .then(response => {
       const body = response.data
-      const price = parseFloat(body.price)
+      var price = parseFloat(body.price)
 
       if (isNaN(price)) {
         return
