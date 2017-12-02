@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     changeAlert: function (_alert) {
-      this.$http.patch('/alerts/' + _alert.id, {alerted: _alert.alerted}).then(response => {
+      this.$http.put('/alert/' + _alert._id, {alerted: _alert.alerted}).then(response => {
         console.log(response)
         // this.alerts = response.data
       }, response => {
@@ -73,13 +73,20 @@ export default {
       })
     },
     createAlert: function () {
-      this.$http.post('/alerts', this.newAlert).then(response => {
+      console.log('new Alert', this.newAlert)
+      this.newAlert.price = parseFloat(this.newAlert.price)
+
+      if (isNaN(this.newAlert.price)) {
+        return console.error('The price should be a number')
+      }
+
+      this.$http.post('/alert', this.newAlert).then(response => {
         console.log(response)
         this.getAlerts()
       })
     },
     removeAlert: function (alert) {
-      this.$http.delete('/alerts/' + alert.id)
+      this.$http.delete('/alert/' + alert._id)
         .then(response => {
           this.getAlerts()
         })
