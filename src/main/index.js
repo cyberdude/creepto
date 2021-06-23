@@ -1,27 +1,27 @@
-"use strict";
+'use strict'
 
-import { app, BrowserWindow, Tray, Menu } from "electron";
-import path from "path";
-import axios from "axios";
+import { app, BrowserWindow, Tray, Menu } from 'electron'
+import path from 'path'
+import axios from 'axios'
 
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
  */
-if (process.env.NODE_ENV !== "development") {
-  global.__static = require("path")
-    .join(__dirname, "/static")
-    .replace(/\\/g, "\\\\");
+if (process.env.NODE_ENV !== 'development') {
+  global.__static = require('path')
+    .join(__dirname, '/static')
+    .replace(/\\/g, '\\\\')
 }
 
-let mainWindow;
-let tray;
-let selectedCurrency;
+let mainWindow
+let tray
+let selectedCurrency
 
 const winURL =
-  process.env.NODE_ENV === "development"
+  process.env.NODE_ENV === 'development'
     ? `http://localhost:9080`
-    : `file://${__dirname}/index.html`;
+    : `file://${__dirname}/index.html`
 
 function createWindow() {
   /**
@@ -30,35 +30,35 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    width: 1000,
-  });
+    width: 1000
+  })
 
-  mainWindow.loadURL(winURL);
+  mainWindow.loadURL(winURL)
 
-  mainWindow.on("closed", () => {
-    mainWindow = null;
-  });
+  mainWindow.on('closed', () => {
+    mainWindow = null
+  })
 }
 
-app.on("ready", () => {
-  createTray();
-  startTick();
-  fetchPrice();
-});
+app.on('ready', () => {
+  createTray()
+  startTick()
+  fetchPrice()
+})
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
   }
-});
+})
 
-app.on("activate", () => {
-  console.log("Activating");
+app.on('activate', () => {
+  console.log('Activating')
   if (mainWindow === null) {
-    console.log("creating window");
-    createWindow();
+    console.log('creating window')
+    createWindow()
   }
-});
+})
 
 // const toggleWindow = () => {
 //   if (mainWindow.isVisible()) {
@@ -71,82 +71,94 @@ app.on("activate", () => {
 
 const currencies = {
   eth: {
-    image: "eth.png",
-    gdaxId: "ETH-USD",
+    image: 'eth.png',
+    gdaxId: 'ETH-USD'
   },
   xtz: {
-    image: "tezos.png",
-    gdaxId: "XTZ-USD",
+    image: 'tezos.png',
+    gdaxId: 'XTZ-USD'
   },
-};
+  doge: {
+    image: 'doge.png',
+    gdaxId: 'DOGE-USD'
+  }
+}
 
-selectedCurrency = currencies["xtz"];
+selectedCurrency = currencies['xtz']
 
 const selectCurrency = (currencyId) => {
-  selectedCurrency = currencies[currencyId];
-  fetchPrice();
-  tray.setImage(path.join(__static, selectedCurrency.image));
-};
+  selectedCurrency = currencies[currencyId]
+  fetchPrice()
+  tray.setImage(path.join(__static, selectedCurrency.image))
+}
 
 const createTray = () => {
-  tray = new Tray(path.join(__static, selectedCurrency.image));
-  tray.setTitle("--");
+  tray = new Tray(path.join(__static, selectedCurrency.image))
+  tray.setTitle('--')
 
   const contextMenu = Menu.buildFromTemplate([
     {
-      label: "ETH",
-      type: "normal",
+      label: 'ETH',
+      type: 'normal',
       click: () => {
-        selectCurrency("eth");
-      },
+        selectCurrency('eth')
+      }
     },
     {
-      label: "XTZ",
-      type: "normal",
+      label: 'XTZ',
+      type: 'normal',
       click: () => {
-        selectCurrency("xtz");
-      },
+        selectCurrency('xtz')
+      }
     },
     {
-      label: "Quit",
-      type: "normal",
+      label: 'DOGE',
+      type: 'normal',
       click: () => {
-        app.quit();
-      },
+        selectCurrency('doge')
+      }
     },
-  ]);
+    {
+      label: 'Quit',
+      type: 'normal',
+      click: () => {
+        app.quit()
+      }
+    }
+  ])
 
-  tray.setContextMenu(contextMenu);
-  tray.on("click", function (event) {});
-};
+  tray.setContextMenu(contextMenu)
+  tray.on('click', function (event) { })
+}
 
 const fetchPrice = async () => {
-  console.log("fetching Price", selectedCurrency);
+  console.log('fetching Price', selectedCurrency)
 
-  const { gdaxId } = selectedCurrency;
+  const { gdaxId } = selectedCurrency
 
   const response = await axios.get(
-    `https://api.gdax.com/products/${gdaxId}/ticker`
-  );
+    `https://api.coinbase.com/v2/prices/${gdaxId}/buy`
+    // `https://pro.coinbase.com/products/${gdaxId}/ticker`
+  )
 
-  const body = response.data;
-  var price = parseFloat(body.price);
-
+  const body = response.data.data
+  var price = parseFloat(body.amount)
+  console.log({ body })
   if (isNaN(price)) {
-    return;
+    return
   }
 
-  price = price.toFixed(2);
-  tray.setTitle("$" + price);
+  price = price.toFixed(2)
+  tray.setTitle('$' + price)
 
   // .then(function(){
   //   tray.setHighlightMode('never')
   // })
-};
+}
 
 const startTick = () => {
-  setInterval(fetchPrice, 60000);
-};
+  setInterval(fetchPrice, 60000)
+}
 
 /**
  * Auto Updater
